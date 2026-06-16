@@ -10,6 +10,7 @@ import PlayCircleFilledIcon from '@mui/icons-material/PlayCircleFilled';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import { addCustomer } from '@/lib/storage';
 
 export default function AddCustomer() {
   const router = useRouter();
@@ -81,6 +82,30 @@ export default function AddCustomer() {
     } else {
       alert('Contact Picker API is not supported on this browser. (Requires Chrome on Android)');
     }
+  };
+
+  const handleSave = () => {
+    if (!customerName) {
+      alert('Customer Name is required!');
+      return;
+    }
+
+    const newCustomer = {
+      "Name": customerName,
+      "Mobile": mobileNumber,
+      "Locality": billingArea,
+      "Bill Name": billingName || customerName,
+      "Email": email,
+      "customer_code": customerCode,
+      "Billing Address": address,
+      "Balance Amount": "0",
+      "active/inactive": "Active",
+      "Connection Start Date": new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: '2-digit' }),
+    };
+
+    addCustomer(newCustomer);
+    alert('Customer added successfully!');
+    router.push('/');
   };
 
   return (
@@ -325,6 +350,7 @@ export default function AddCustomer() {
         <Button 
           fullWidth 
           variant="contained" 
+          onClick={handleSave}
           sx={{ 
             height: '60px', 
             borderRadius: 0, 
